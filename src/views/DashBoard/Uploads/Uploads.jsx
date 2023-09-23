@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import AppTopBar from '../../../components/AppBar';
 import DrawerBar from '../../../components/DrawerBar';
 // import LinearProgress from '@material-ui/core/LinearProgress';
-import { Button, Checkbox, Link, ListItem, TextField, Typography } from '@mui/material';
+import { Button, ListItem, Typography } from '@mui/material';
 import { uploadService } from '../../../service/uploadservice';
 import { Grid, Container } from '@mui/material';
 
@@ -57,6 +57,9 @@ export default function Uploads() {
         <Container alignItems="center" >
           <Grid container  sx={{height: "100vh", alignItems: "center", justifyContent: "center",  }}>
             <Grid item xs={12} md={12}lg={5} sx={{background: "white",boxShadow: 3, borderRadius: 3, p:3, width: "100%" }}>
+            <Typography variant="h4" pb={5} color="initial" align="center">
+                Upload Image
+              </Typography>
             <div className="" style={{marginTop: "100px"}}>
           {currentFile && (
             <Box className="mb25" display="flex" alignItems="center">
@@ -66,20 +69,20 @@ export default function Uploads() {
             </Box>)
           }
 
-          {/* <label htmlFor="btn-upload" style={{marginBottom: "50px"}}> */}
-          <Box className="mb25" display="flex" alignItems="center" style={{width: "100%", background: 'red'}}>            <input
-              id="btn-upload"
-              name="btn-upload"
-              style={{ display: 'none'}}
-              type="file"
-              onChange={selectFile} />
-            <Button
-              className="btn-choose"
-              variant="outlined"
-              component="span" >
-              Choose Files
-            </Button>
+          {/* <label htmlFor="btn-upload" style={{marginBottom: "50px"}} /> */}
+          <Box className="mb25" display="flex" alignItems="center" style={{width: "100%"}}>            
           </Box>
+          <Button variant="contained" 
+            component="label" 
+            color="inherit"
+            style={{ width: '250px', marginBottom: '30px'}}
+            >
+            {" "}
+              Upload a file
+            <input type="file" hidden             
+              onChange={selectFile} />
+          </Button>
+
           <div className="file-name">
           {selectedFiles && selectedFiles.length > 0 ? selectedFiles[0].name : null}
           </div>
@@ -89,6 +92,7 @@ export default function Uploads() {
             variant="contained"
             component="span"
             disabled={!selectedFiles}
+            style={{ width: '100%', marginBottom: "25px"}}
             onClick={upload}>
             Upload
           </Button>
