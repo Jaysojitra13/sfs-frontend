@@ -23,9 +23,10 @@ export default function UploadList() {
     const [sLoading, setIsLoading] = useState(null);
 
     useEffect(() => {
-    const apiUrl = config.BASE_URL;
+    const apiUrl = config.BASE_URL+'/file/list';
         axios.get(apiUrl)
       .then((response) => {
+        console.log("asdf")
           setImageData(response.data);
           setIsLoading(false);
        })
