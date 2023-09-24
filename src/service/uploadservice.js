@@ -20,11 +20,14 @@ import http from "../service/http-common";
 // }
 
 function upload(file, onUploadProgress) {
+    const token = localStorage.getItem("token");
+    console.log("tokenggg", token)
     let formData = new FormData();
     formData.append("file", file);
-    return http.post("/upload", formData, {
+    return http.post("/file/upload", formData, {
         headers: {
             "Content-Type": "multipart/form-data",
+            "Authorization": token
         },
         onUploadProgress,
     });

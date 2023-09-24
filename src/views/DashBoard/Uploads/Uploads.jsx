@@ -4,36 +4,48 @@ import Box from '@mui/material/Box';
 import AppTopBar from '../../../components/AppBar';
 import DrawerBar from '../../../components/DrawerBar';
 // import LinearProgress from '@material-ui/core/LinearProgress';
-import { Button, ListItem, Typography } from '@mui/material';
+import { Alert, Button, ListItem, Typography } from '@mui/material';
 import { uploadService } from '../../../service/uploadservice';
 import { Grid, Container } from '@mui/material';
 
 const defaultTheme = createTheme();
 
 export default function Uploads() {
-  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [selectedFiles, setSelectedFiles] = useState(null);
   const [progress, setProgress ] = useState(null);
   const [currentFile, setCurrentFile ] = useState(null);
   const [message, setMessage ] = useState("");
   const [fileInfos, setFileInfos ] = useState(null);
   const [isError, setIsError ] = useState(false);
+  const [fileUploadedSuccessfully, setFileUploadedSuccessfully ] = useState(false);
 
   const upload = () => {
+    setIsError("")
+    console.log("ggggg", selectedFiles)
+    if(!selectedFiles?.length) {
+      setIsError("Please upload a file")
+      return
+    }
+    console.log('hehehehehehr')
     let currentFile = selectedFiles[0];
-    setProgress(0);
+    // setProgress(0);
     setCurrentFile(currentFile);
 
     uploadService.upload(currentFile, (event) => {
       setProgress(Math.round((100 * event.loaded) / event.total))
     })
       .then((response) => {
-        setMessage(response.data.message)
+        console.log("111", response)
         isError(false)
-        return uploadService.getFiles();
+        if(response.success) {
+          setFileUploadedSuccessfully(true)
+        }
+        // return uploadService.getFiles();
       })
-      .then((files) => {
-        setFileInfos(files.info)
-      })
+      // .then((files) => {
+      //   console.log("222", files)
+      //   setFileInfos(files.info)
+      // })
       .catch(() => {
         setProgress(0)
         setMessage("Could not upload the file!")
@@ -42,12 +54,12 @@ export default function Uploads() {
       });
 
     setSelectedFiles(null)
+    return
   }
 
   const selectFile =(e) => {
     setSelectedFiles(e.target.files)
-    console.log('>>>>>>>', selectedFiles)
-  }
+   }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -60,6 +72,10 @@ export default function Uploads() {
             <Grid item xs={12} md={12}lg={5} sx={{background: "white",boxShadow: 3, borderRadius: 3, p:3, width: "100%" }}>
             <Typography variant="h4" pb={5} color="initial" align="center">
                 Upload Image
+              </Typography>
+              <Typography pb={5} color="initial" align="center">
+              { isError ? <Alert severity="error">{isError}</Alert> : null }
+              {fileUploadedSuccessfully && <Alert severity="error">File uploaded successfully</Alert> }
               </Typography>
             <div className="" style={{marginTop: "100px"}}>
           {currentFile && (
@@ -83,21 +99,21 @@ export default function Uploads() {
             <input type="file" hidden             
               onChange={selectFile} />
           </Button>
-
           <div className="file-name">
           {selectedFiles && selectedFiles.length > 0 ? selectedFiles[0].name : null}
           </div>
           <Button
             className="btn-upload"
-            color="primary"
+            // color="primary"
             variant="contained"
             component="span"
-            disabled={!selectedFiles}
+            // disabled={!!selectedFiles}
             style={{ width: '100%', marginBottom: "25px"}}
-            onClick={upload}>
+            onClick={upload}
+            >
             Upload
           </Button>
-
+          <Button fullWidth sx={{color: "white", }} >Login</Button>
           <Typography variant="subtitle2" className={`upload-message ${isError ? "error" : ""}`}>
             {message}
           </Typography>
