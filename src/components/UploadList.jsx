@@ -10,7 +10,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { config } from '../config';
 import axios from 'axios';
-
+import Typography from '@mui/material/Typography';
 
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -24,10 +24,12 @@ export default function UploadList() {
 
     useEffect(() => {
     const apiUrl = config.BASE_URL+'/file/list';
-        axios.get(apiUrl)
+        axios.get(apiUrl, { headers: {
+          Authorization: localStorage.getItem('token')
+        }})
       .then((response) => {
-        console.log("asdf")
           setImageData(response.data);
+          console.log(imageData);
           setIsLoading(false);
        })
        .catch((error) => {
@@ -42,8 +44,8 @@ export default function UploadList() {
       <main>
         <Container sx={{ py: 8, marginTop: '100px' }}maxWidth="xl">
           <Grid container spacing={6}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={12} md={2}>
+            { cards.map((file) => (
+              <Grid item xs={12} sm={12} md={2}>
                 <Card
                   sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
                 >
@@ -55,6 +57,9 @@ export default function UploadList() {
                     image="https://source.unsplash.com/random?wallpapers"
                   />
                   <CardContent sx={{ flexGrow: 1 }}>
+                  <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                    {file.fileName}
+                  </Typography>
                   </CardContent>
                   <CardActions>
                     <Button size="small">View</Button>
@@ -62,7 +67,7 @@ export default function UploadList() {
                   </CardActions>
                 </Card>
               </Grid>
-            ))}
+            )) }
           </Grid>
         </Container>
       </main>
