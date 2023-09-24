@@ -1,14 +1,44 @@
-import React, { Fragment } from 'react';
-import {Container, Grid, Button, Box, TextField, Typography, Checkbox, Link} from "@mui/material"
+import React, { Fragment, useState } from 'react';
+import {Container, Grid, Button, Box, TextField, Typography, Checkbox, Link, Alert} from "@mui/material"
 import { useNavigate } from "react-router-dom";
-
+import axios from 'axios';
+import { config } from '../../config';
 
 const Login = () => {
+
   const navigate = useNavigate()
-  const LoginClick = () => {
-    console.log("Login Clicked");
-    navigate('/user/dashboard/home');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleChange = (e, fn) => {
+    console.log(email, password, e.target.value)
+    setError("")
+    fn(e.target.value)
   }
+
+  const handleLogin = async () => {
+    setError("")
+    console.log(email, password)
+    if (!email || !password) {
+      setError('Both email and password are required.');
+      return;
+    }
+
+    try {
+      const response = await axios.post(`${config.BASE_URL}/auth/login`, {
+        email,
+        password,
+      });
+      const token = response.data.token;
+      localStorage.setItem('token', token);
+      navigate('/user/dashboard/home');
+    } catch (error) {
+      setError('Login failed. Please check your credentials and try again.');
+      console.error('Login error:', error);
+    }
+  };
+
   return (
     <Fragment>
       <Box sx={{background: 'linear-gradient(45deg, #cfbcdf, #c7ebf0)', width: "100%"}}>
@@ -18,13 +48,30 @@ const Login = () => {
               <Typography variant="h4" pb={5} color="initial" align="center" fontWeight="bold">
                 Login
               </Typography>
+              <Typography pb={5} color="initial" align="center">
+              { error ? <Alert severity="error">{error}</Alert> : null }
+              </Typography>
               <Box>
-                <TextField id="outlined-basic" label="Email" variant="outlined" fullWidth />
+                <TextField 
+                  type="email"
+                  id="outlined-basic" 
+                  label="Email" 
+                  variant="outlined" fullWidth 
+                  onChange={(e) => handleChange(e, setEmail)}
+                  />
               </Box>
-              <Box my={3} ><TextField id="outlined-basic" label="Password" variant="outlined" fullWidth />
+              <Box my={3} >
+              <TextField 
+                type="password"
+                id="outlined-basic" 
+                label="Password" variant="outlined" 
+                fullWidth 
+                onChange={(e) => handleChange(e, setPassword)}
+
+                />
               </Box>
               <Box sx={{ background: '#0288d1', color: '#fff', p: 0.4, borderRadius: '4px'}}>
-              <Button fullWidth sx={{color: "white", }} onClick={LoginClick}>Login</Button>
+              <Button fullWidth sx={{color: "white", }} onClick={handleLogin}>Login</Button>
               </Box>
               <Box sx={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
                 <Box display="flex">

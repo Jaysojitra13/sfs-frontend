@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -8,6 +8,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { config } from '../config';
+import axios from 'axios';
 
 
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -15,7 +17,24 @@ const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
+
 export default function UploadList() {
+    const [imageData, setImageData] = useState(null);
+    const [sLoading, setIsLoading] = useState(null);
+
+    useEffect(() => {
+    const apiUrl = config.BASE_URL;
+        axios.get(apiUrl)
+      .then((response) => {
+          setImageData(response.data);
+          setIsLoading(false);
+       })
+       .catch((error) => {
+        console.error('Error fetching image data:', error);
+       setIsLoading(false);
+    });
+    }, []); // The empty dependency array ensures this effect runs only once on component mount
+    
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />

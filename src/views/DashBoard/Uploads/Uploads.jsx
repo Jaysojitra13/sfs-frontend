@@ -46,6 +46,7 @@ export default function Uploads() {
 
   const selectFile =(e) => {
     setSelectedFiles(e.target.files)
+    console.log('>>>>>>>', selectedFiles)
   }
 
   return (
