@@ -15,7 +15,6 @@ export default function Dashboard() {
       <Box sx={{ display: 'flex' }}>
         <AppTopBar routeName="Dashboard Home"/>
         <DrawerBar />
-        <h1>Hello</h1>
         <UploadList />
         <Box
           component="main"

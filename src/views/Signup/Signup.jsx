@@ -44,7 +44,6 @@ const Signup = () => {
       return;
     }
     try {
-      console.log(email, password, firstname, lastname);
       const fullName = `${firstname} ${lastname}`
       const response = await axios.post(`${config.BASE_URL}/auth/sign-up`, {
         fullName,
@@ -52,7 +51,6 @@ const Signup = () => {
         password
       });
   
-      console.log('User registered successfully:', response.data);
       navigate('/user/dashboard/home');
     } catch (error) {
       setError('Registration failed. Please try again.');

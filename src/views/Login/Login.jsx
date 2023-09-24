@@ -12,7 +12,6 @@ const Login = () => {
   const [error, setError] = useState('');
 
   const handleChange = (e, fn) => {
-    console.log(email, password, e.target.value)
     setError("")
     fn(e.target.value)
   }

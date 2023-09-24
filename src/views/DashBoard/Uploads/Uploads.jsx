@@ -21,12 +21,10 @@ export default function Uploads() {
 
   const upload = () => {
     setIsError("")
-    console.log("ggggg", selectedFiles)
     if(!selectedFiles?.length) {
       setIsError("Please upload a file")
       return
     }
-    console.log('hehehehehehr')
     let currentFile = selectedFiles[0];
     // setProgress(0);
     setCurrentFile(currentFile);
@@ -35,9 +33,8 @@ export default function Uploads() {
       setProgress(Math.round((100 * event.loaded) / event.total))
     })
       .then((response) => {
-        console.log("111", response)
-        isError(false)
-        if(response.success) {
+        console.log("111 ==== ", response?.data?.status)
+        if(response?.data?.status) {
           setFileUploadedSuccessfully(true)
         }
         // return uploadService.getFiles();
@@ -74,8 +71,7 @@ export default function Uploads() {
                 Upload Image
               </Typography>
               <Typography pb={5} color="initial" align="center">
-              { isError ? <Alert severity="error">{isError}</Alert> : null }
-              {fileUploadedSuccessfully && <Alert severity="error">File uploaded successfully</Alert> }
+              {fileUploadedSuccessfully && <Alert severity="success">File uploaded successfully</Alert> }
               </Typography>
             <div className="" style={{marginTop: "100px"}}>
           {currentFile && (

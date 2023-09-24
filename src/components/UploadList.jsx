@@ -28,6 +28,8 @@ export default function UploadList() {
     const [isModalOpen, setModalOpen] = useState(false);
     const [fileData, setFileData] = useState({})
     const [fileUrl, setFileUrl] = useState("")
+    const [noFile, setNoFileData] = useState(false)
+
     useEffect(() => {
     const apiUrl = config.BASE_URL + "/file/list";
     const token = localStorage.getItem("token");
@@ -37,7 +39,11 @@ export default function UploadList() {
       }
     })
       .then((response) => {
-          console.log("YYY", response)
+          if (response?.data?.length) {
+            setNoFileData(false);
+          } else {
+            setNoFileData(true);
+          }
           setImageData(response.data);
           setIsLoading(false);
        })
@@ -49,7 +55,6 @@ export default function UploadList() {
     
     const handleCardClick = async (data) => {
       const fileWithUrl = await getFile(data);
-      console.log("file with url", fileWithUrl);
       setFileUrl(fileWithUrl.data.url);
       setFileData(data)
       setModalOpen(true);
@@ -70,7 +75,6 @@ export default function UploadList() {
     }
 
     const handleDownload = async (file) => {
-      console.log("fffil", `${config.BASE_URL}/file/view/${file._id}`)
       try {
         const data = await getFile(file)
         if(fileData) {
@@ -121,9 +125,9 @@ export default function UploadList() {
                 </Card>
               </Grid>
             ))
-          : <h1 xs={12}>You have no uploads</h1>}
+          : null}
       </Grid>
-
+      { noFile ? <h1>You have no uploads</h1> : null}
       <Dialog open={isModalOpen} onClose={handleCloseModal}>
         <DialogContent>
           {fileData && (
